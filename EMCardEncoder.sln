@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMCardEncoder.Console", "EM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMCardEncoder", "EMCardEncoder\EMCardEncoder.csproj", "{A60C41D1-4CBF-4FE9-838F-F599C86AD528}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMCardEncoder.WinForms", "EMCardEncoder.WinForms\EMCardEncoder.WinForms.csproj", "{80B2E24C-C383-4B54-81FC-B65FC7DD21BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A60C41D1-4CBF-4FE9-838F-F599C86AD528}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A60C41D1-4CBF-4FE9-838F-F599C86AD528}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A60C41D1-4CBF-4FE9-838F-F599C86AD528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80B2E24C-C383-4B54-81FC-B65FC7DD21BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B2E24C-C383-4B54-81FC-B65FC7DD21BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B2E24C-C383-4B54-81FC-B65FC7DD21BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B2E24C-C383-4B54-81FC-B65FC7DD21BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

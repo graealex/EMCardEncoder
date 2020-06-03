@@ -146,7 +146,8 @@ namespace EMCardEncoder
 			sendBuffer[5 + (payload?.Length ?? 0)] = StopByte;
 
 			// Send the buffered data
-			interfacePort.Write(sendBuffer, 0, sendBuffer.Length);
+			interfaceStream.Write(sendBuffer, 0, sendBuffer.Length);
+			interfaceStream.Flush();
 		}
 
 		public byte[] ReadMessage()
@@ -158,25 +159,25 @@ namespace EMCardEncoder
 			try
 			{
 				// Expected byte 0x02 (Start byte)
-				readData1 = interfacePort.ReadByte();
+				readData1 = interfaceStream.ReadByte();
 				if (readData1 != StartByte)
 					throw new InvalidDataException(String.Format("Unexpected data {0}", readData1));
 
 				// Expected bytes 0x01 ff (Command bytes)
-				readData1 = interfacePort.ReadByte();
-				readData2 = interfacePort.ReadByte();
+				readData1 = interfaceStream.ReadByte();
+				readData2 = interfaceStream.ReadByte();
 				message = (ReceiveCommand)((readData1 << 8) | (readData2));
 
 				// Payload if applicable
-				readData1 = interfacePort.ReadByte();
+				readData1 = interfaceStream.ReadByte();
 				byte[] payload = new byte[readData1];
 				for (byte i = 0; i < readData1; i++)
 				{
-					payload[i] = (byte)interfacePort.ReadByte();
+					payload[i] = (byte)interfaceStream.ReadByte();
 				}
 
 				// Checksum
-				readData1 = interfacePort.ReadByte();
+				readData1 = interfaceStream.ReadByte();
 
 				// Check values
 				readData1 ^= StartByte;
@@ -193,7 +194,7 @@ namespace EMCardEncoder
 					throw new InvalidDataException("Unexpected checksum");
 
 				// Expected byte 0x03 (Stop byte)
-				readData1 = interfacePort.ReadByte();
+				readData1 = interfaceStream.ReadByte();
 				if (readData1 != StopByte)
 					throw new InvalidDataException(String.Format("Unexpected data {0}", readData1));
 
@@ -224,6 +225,48 @@ namespace EMCardEncoder
 			}
 
 			disposed = true;
+		}
+
+		public static string FormatBytes(byte[] input)
+		{
+			if (input == null) return String.Empty;
+			if (input.Length == 0) return String.Empty;
+
+			StringBuilder hexBuilder = new StringBuilder(input.Length);
+			for (int i = 0; i < input.Length; i++)
+			{
+				hexBuilder.AppendFormat("{0:x2}", input[i]);
+				if (i + 1 < input.Length)
+					hexBuilder.Append(' ');
+			}
+			return hexBuilder.ToString();
+		}
+
+		public static byte[] ReadBytes(string input)
+		{
+			if (input == null) return null;
+			if (input.Length == 0) return null;
+
+			input = input.Replace("0x", "");
+			input = input.Replace(" ", "");
+
+			if (input.Length % 2 == 1)
+				throw new Exception("The binary key cannot have an odd number of digits");
+
+			byte[] arr = new byte[input.Length >> 1];
+
+			for (int i = 0; i < input.Length >> 1; ++i)
+			{
+				arr[i] = (byte)((GetHexVal(input[i << 1]) << 4) + (GetHexVal(input[(i << 1) + 1])));
+			}
+
+			return arr;
+		}
+
+		public static int GetHexVal(char hex)
+		{
+			int val = (int)hex;
+			return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
 		}
 	}
 }
